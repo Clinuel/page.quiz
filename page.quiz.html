@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Quiz Game</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7d794; /* Bright background color */
+    text-align: center;
+    padding: 50px;
+  }
+  #question {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  .button {
+    font-size: 20px;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+  }
+  #timer {
+    font-size: 20px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+  <div id="quiz-container">
+    <h1>Math Quiz for Kids</h1>
+    <div id="question"></div>
+    <button class="button" onclick="submitAnswer(true)">True</button>
+    <button class="button" onclick="submitAnswer(false)">False</button>
+    <div id="result"></div>
+    <div id="timer"></div>
+  </div>
+
+<script>
+let currentTimeout;
+
+function generateQuestion() {
+  const num1 = Math.floor(Math.random() * 10);
+  const num2 = Math.floor(Math.random() * 10);
+  const correctAnswer = num1 + num2;
+  const trueOrFalse = Math.random() < 0.5;
+  const displayedAnswer = trueOrFalse ? correctAnswer : correctAnswer + Math.floor(Math.random() * 3) + 1;
+
+  document.getElementById('question').textContent = `Is ${num1} + ${num2} = ${displayedAnswer}?`;
+  document.getElementById('result').textContent = '';
+  startTimer();
+}
+
+function submitAnswer(userAnswer) {
+  clearTimeout(currentTimeout);
+  const questionText = document.getElementById('question').textContent;
+  const equationParts = questionText.split(' ');
+  const correctAnswer = parseInt(equationParts[2]) + parseInt(equationParts[4]);
+  const displayedAnswer = parseInt(equationParts[6]);
+  const isCorrect = (correctAnswer === displayedAnswer) === userAnswer;
+
+  document.getElementById('result').textContent = isCorrect ? 'Correct!' : 'Wrong!';
+  setTimeout(generateQuestion, 2000);
+}
+
+function startTimer() {
+  let timeLeft = 7;
+  const timerElement = document.getElementById('timer');
+  timerElement.textContent = `Time remaining: ${timeLeft}`;
+
+  currentTimeout = setInterval(() => {
+    timeLeft -= 1;
+    timerElement.textContent = `Time remaining: ${timeLeft}`;
+    if (timeLeft <= 0) {
+      clearTimeout(currentTimeout);
+      timerElement.textContent = 'Time\'s up!';
+      document.getElementById('result').textContent = 'Try again!';
+      setTimeout(generateQuestion, 2000);
+    }
+  }, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', generateQuestion);
+</script>
+</body>
+</html>
